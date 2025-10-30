@@ -11,11 +11,13 @@ This Nextflow workflow sends the genotypes for imputation to [TOPMed](https://im
 
 ## Running The Workflow
 
-If the previous steps have been completed successfully you can run:
+To run the workflow, run:
 
 ```bash
 nextflow run main.nf -profile eddie -resume -with-report -with-trace -c conf/run.config
 ```
+
+where;
 
 - The `eddie` profile provides the platform specific parameters and is only to be used by University of Edinburgh researchers on the [Eddie platform](https://digitalresearchservices.ed.ac.uk/resources/eddie).
 - The `conf/run.config` provides the inputs to the pipeline (see below)
