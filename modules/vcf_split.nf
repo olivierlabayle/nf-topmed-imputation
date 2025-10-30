@@ -13,7 +13,7 @@ process MakeVCFSplit {
     script:
         genotypes_prefix = GetPrefix(genotypes[0])
         samples_id = samples.getName().tokenize(".")[1]
-        output_prefix = "topmed.${chr}.${samples_id}"
+        output_prefix = "cohort_to_impute.${chr}.${samples_id}"
         """
         plink2 \
             --bfile ${genotypes_prefix} \

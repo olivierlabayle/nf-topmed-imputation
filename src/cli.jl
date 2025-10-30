@@ -60,7 +60,7 @@ function cli_settings()
         "--output-prefix"
             arg_type = String
             help = "Prefix to output files."
-            default = "topmed"
+            default = "cohort_to_impute"
 
         "--n-samples-per-file"
             arg_type = Int
