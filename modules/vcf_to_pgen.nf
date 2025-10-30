@@ -1,4 +1,4 @@
-include { GetPrefix } from 'modules/utils.nf'
+include { GetPrefix } from './utils.nf'
 
 process VCFToPGEN {
     label "bigmem"

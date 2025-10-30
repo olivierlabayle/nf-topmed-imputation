@@ -1,4 +1,4 @@
-include { GetJuliaCmd } from 'modules/utils.nf'
+include { GetJuliaCmd } from './utils.nf'
 
 process GetTOPMedDownloadList {
     input:

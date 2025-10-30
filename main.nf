@@ -1,16 +1,16 @@
-include { GetPrefix; GetJuliaCmd } from 'modules/utils.nf'
-include { WriteImputationSplitLists } from 'modules/imputation_list.nf'
-include { MakeVCFSplit } from 'modules/vcf_split.nf'
-include { TOPMedImputation } from 'modules/topmed_imputation.nf'
-include { GetTOPMedDownloadList } from 'modules/topmed_download_list.nf'
-include { DownloadTOPMedZipFile } from 'modules/topmed_download.nf'
-include { UnzipTOPMedFile } from 'modules/unzip_topmed_file.nf'
-include { MergeVCFsByChr } from 'modules/merge_vcfs.nf'
-include { IndexVCF } from 'modules/index_vcf.nf'
-include { QCMergedImputedFile } from 'modules/qc_imputed_file.nf'
-include { VCFToPGEN } from 'modules/vcf_to_pgen.nf'
+include { GetPrefix; GetJuliaCmd } from './modules/utils.nf'
+include { WriteImputationSplitLists } from './modules/imputation_list.nf'
+include { MakeVCFSplit } from './modules/vcf_split.nf'
+include { TOPMedImputation } from './modules/topmed_imputation.nf'
+include { GetTOPMedDownloadList } from './modules/topmed_download_list.nf'
+include { DownloadTOPMedZipFile } from './modules/topmed_download.nf'
+include { UnzipTOPMedFile } from './modules/unzip_topmed_file.nf'
+include { MergeVCFsByChr } from './modules/merge_vcfs.nf'
+include { IndexVCF } from './modules/index_vcf.nf'
+include { QCMergedImputedFile } from './modules/qc_imputed_file.nf'
+include { VCFToPGEN } from './modules/vcf_to_pgen.nf'
 
-workflow Imputation {
+workflow {
     topmed_api_token = file(params.TOPMED_TOKEN_FILE)
     bed_genotypes = Channel.fromPath("${params.GENOTYPES_PREFIX}.{bed,bim,fam}").collect()
     // Send for Imputation or retrieve jobs list

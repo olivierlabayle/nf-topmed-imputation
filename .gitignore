@@ -2,3 +2,7 @@
 .vscode/
 ./assets/
 topmed-api-token
+trace*
+.nextflow*
+work/
+report*

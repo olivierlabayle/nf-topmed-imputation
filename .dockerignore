@@ -1,2 +1,6 @@
 topmed-api-token
 ./test/
+trace*
+.nextflow*
+./work/
+report*

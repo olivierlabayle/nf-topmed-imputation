@@ -1,4 +1,4 @@
-include { GetPrefix; GetJuliaCmd } from 'modules/utils.nf'
+include { GetPrefix; GetJuliaCmd } from './utils.nf'
 
 process WriteImputationSplitLists {
     input:

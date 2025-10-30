@@ -1,4 +1,4 @@
-include { GetPrefix; GetJuliaCmd } from 'modules/utils.nf'
+include { GetPrefix; GetJuliaCmd } from './utils.nf'
 
 process TOPMedImputation {
     cpus = params.TOPMED_MAX_PARALLEL_JOBS
