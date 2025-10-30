@@ -1,0 +1,13 @@
+name = "TopMedImputation"
+uuid = "87672984-f769-4980-80ba-8c0a79ef0119"
+authors = ["Olivier Labayle <olabayle@gmail.com> and contributors"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1.11"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
