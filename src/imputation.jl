@@ -1,3 +1,38 @@
+"""
+    read_bim(file)
+
+Columns Description from: https://www.cog-genomics.org/plink/1.9/formats#bim
+- Chromosome code (either an integer, or 'X'/'Y'/'XY'/'MT'; '0' indicates unknown) or name
+- Variant identifier
+- Position in morgans or centimorgans (safe to use dummy value of '0')
+- Base-pair coordinate (1-based; limited to 231-2)
+- Allele 1 (corresponding to clear bits in .bed; usually minor)
+- Allele 2 (corresponding to set bits in .bed; usually major)
+"""
+read_bim(file) = CSV.read(
+    file, 
+    DataFrame, 
+    delim='\t', 
+    header=["CHR_CODE", "VARIANT_ID", "POSITION", "BP_COORD", "ALLELE_1", "ALLELE_2"]
+)
+
+"""
+    read_fam(file)
+
+Columns Description from: https://www.cog-genomics.org/plink/1.9/formats#fam
+- Family ID ('FID')
+- Within-family ID ('IID'; cannot be '0')
+- Within-family ID of father ('0' if father isn't in dataset)
+- Within-family ID of mother ('0' if mother isn't in dataset)
+- Sex code ('1' = male, '2' = female, '0' = unknown)
+- Phenotype value ('1' = control, '2' = case, '-9'/'0'/non-numeric = missing data if case/control)
+"""
+read_fam(file) = CSV.read(
+    file, 
+    DataFrame, 
+    header=["FID", "IID", "FATHER_ID", "MOTHER_ID", "SEX", "PHENOTYPE"]
+)
+
 function write_sample_batches(prefix; output_prefix="topmed", samples_per_file=5_000)
     fam = read_fam(string(prefix, ".fam"))
     return map(Iterators.partition(1:nrow(fam), samples_per_file)) do indices
