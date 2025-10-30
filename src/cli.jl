@@ -60,7 +60,7 @@ function cli_settings()
         "--output-prefix"
             arg_type = String
             help = "Prefix to output files."
-            default = "genomicc"
+            default = "topmed"
 
         "--n-samples-per-file"
             arg_type = Int
@@ -133,7 +133,6 @@ end
 function julia_main()::Cint
     settings = parse_args(ARGS, cli_settings())
     cmd = settings["%COMMAND%"]
-    @info "Running GenOMICC Workflows: $cmd"
     cmd_settings = settings[cmd]
     if cmd == "write-imputation-split-lists"
         write_imputation_split_lists(

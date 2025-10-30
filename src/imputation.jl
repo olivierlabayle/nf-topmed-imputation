@@ -1,4 +1,4 @@
-function write_sample_batches(prefix; output_prefix="genomicc", samples_per_file=5_000)
+function write_sample_batches(prefix; output_prefix="topmed", samples_per_file=5_000)
     fam = read_fam(string(prefix, ".fam"))
     return map(Iterators.partition(1:nrow(fam), samples_per_file)) do indices
         filename = string(output_prefix, ".samples_", indices[1], "_", indices[end], ".keep")
@@ -6,7 +6,7 @@ function write_sample_batches(prefix; output_prefix="genomicc", samples_per_file
     end
 end
 
-function write_chromosome_list(genotypes_prefix; output_prefix="genomicc")
+function write_chromosome_list(genotypes_prefix; output_prefix="topmed")
     bim = read_bim(string(genotypes_prefix, ".bim"))
     open(string(output_prefix, ".chromosomes.txt"), "w") do io
         for chr in unique(bim.CHR_CODE)
@@ -124,7 +124,7 @@ function _download_topmed_file(file_dict, token, jobname; refresh_rate=360)
     end
 end
 
-function send_to_topmed_and_write_job_id(channel, token, password; refresh_rate=120, r2=0.8, output_prefix="genomicc")
+function send_to_topmed_and_write_job_id(channel, token, password; refresh_rate=120, r2=0.8, output_prefix="topmed")
     for (jobname, group) in channel
         job_details = send_job_to_topmed(group, jobname, token, password;r2=r2)
         job_id = job_details["id"]
@@ -181,7 +181,7 @@ function download_topmed_file(job_id, token_file, file_info; md5_file=nothing, r
     return 0
 end
 
-function write_imputation_split_lists(genotypes_prefix; output_prefix="genomicc", samples_per_file=20_000)
+function write_imputation_split_lists(genotypes_prefix; output_prefix="topmed", samples_per_file=20_000)
     write_sample_batches(genotypes_prefix; output_prefix=output_prefix, samples_per_file=samples_per_file)
     write_chromosome_list(genotypes_prefix; output_prefix=output_prefix)
 end
@@ -191,7 +191,7 @@ function impute(genotypes_prefix, token_file;
     max_concurrent_submissions=3,
     refresh_rate=120,
     r2=0.8,
-    output_prefix="genomicc"
+    output_prefix="topmed"
     )
     token = get_token(token_file)
     # Split the bed file into smaller VCF files for each chromosome

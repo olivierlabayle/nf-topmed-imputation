@@ -1,12 +1,12 @@
 # TopMedImputation
 
-[![Build Status](https://github.com/olivierlabayle/TopMedImputation.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/olivierlabayle/TopMedImputation.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![Build Status](https://github.com/olivierlabayle/nf-topmed-imputation/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/olivierlabayle/nf-topmed-imputation/actions/workflows/CI.yml?query=branch%3Amain)
 
 
 This Nextflow workflow sends the genotypes for imputation to [TOPMed](https://imputation.biodatacatalyst.nhlbi.nih.gov/#!pages/home), downloads and aggregates the results per chromosome. It follows the principles provided in their [documentation](https://topmedimpute.readthedocs.io/en/latest/).
 
 !!! note "Platform"
-    The volume of data downloaded can be very large, so make sure you have enough disk space available.
+    The volume of downloaded data can be very large, so make sure you have enough disk space available before running.
 
 
 ## Running The Workflow
