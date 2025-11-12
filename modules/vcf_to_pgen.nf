@@ -13,7 +13,7 @@ process VCFToPGEN {
     script:
         output_prefix = GetPrefix(GetPrefix(vcf_file))
         """
-        plink2 --vcf ${vcf_file} --make-pgen --threads ${task.cpus} --out ${output_prefix}
+        plink2 --vcf ${vcf_file} dosage=GP --make-pgen --threads ${task.cpus} --out ${output_prefix}
 
         awk -F'\\t' 'BEGIN{OFS="\\t"} {sub(/.*@/, "", \$1); print}' ${output_prefix}.psam > ${output_prefix}.psam.tmp
         mv ${output_prefix}.psam.tmp ${output_prefix}.psam
