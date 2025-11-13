@@ -6,3 +6,4 @@ trace*
 .nextflow*
 work/
 report*
+results/

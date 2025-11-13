@@ -8,7 +8,8 @@ include { UnzipTOPMedFile } from './modules/unzip_topmed_file.nf'
 include { MergeVCFsByChr } from './modules/merge_vcfs.nf'
 include { IndexVCF } from './modules/index_vcf.nf'
 include { QCMergedImputedFile } from './modules/qc_imputed_file.nf'
-include { VCFToPGEN } from './modules/vcf_to_pgen.nf'
+include { BCFToPGEN } from './modules/vcf_to_pgen.nf'
+include { DownloadReferenceGenome } from './modules/download_reference_genome.nf'
 
 workflow {
     topmed_api_token = file(params.TOPMED_TOKEN_FILE)
@@ -31,6 +32,8 @@ workflow {
     else {
         job_ids = Channel.fromList(params.TOPMED_JOBS_LIST)
     }
+    // Download Reference Genome
+    ref_genome = DownloadReferenceGenome()
     // Download TOPMed files
     files_to_download = GetTOPMedDownloadList(topmed_api_token, job_ids)
     zip_files_infos = files_to_download.zip_files.transpose()
@@ -48,7 +51,7 @@ workflow {
         .groupTuple()
     chr_vcfs = MergeVCFsByChr(imputed_files_and_indices_by_chr)
     // QC merged VCFs
-    qced_vcfs_chrs = QCMergedImputedFile(chr_vcfs)
+    qced_vcfs_chrs = QCMergedImputedFile(chr_vcfs, ref_genome)
     // Convert VCFs to PGEN
-    VCFToPGEN(qced_vcfs_chrs)
+    BCFToPGEN(qced_vcfs_chrs)
 }
