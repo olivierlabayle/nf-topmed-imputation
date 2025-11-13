@@ -2,8 +2,8 @@ include { GetPrefix } from './utils.nf'
 
 process QCMergedImputedFile {
     input:
-        tuple path(ref_genome), path(ref_genome_index)
         path vcf_file
+        tuple path(ref_genome), path(ref_genome_index)
 
     output:
         tuple path("${output_bcf}"), path("${output_bcf}.csi")

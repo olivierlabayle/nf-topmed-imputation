@@ -25,6 +25,14 @@ RUN rm /var/lib/dpkg/info/libc-bin.* \
         libbz2-dev \
         liblzma-dev
 
+# SAMTOOLS
+RUN wget https://github.com/samtools/samtools/releases/download/1.22.1/samtools-1.22.1.tar.bz2 \
+    && tar -xvjf samtools-1.22.1.tar.bz2 \
+    && cd samtools-1.22.1 \
+    && ./configure --prefix=/usr/local/ \
+    && make \
+    && make install
+
 # Install BCFTOOLS
 RUN wget https://github.com/samtools/bcftools/releases/download/1.22/bcftools-1.22.tar.bz2 \
     && tar -xvjf bcftools-1.22.tar.bz2 \
