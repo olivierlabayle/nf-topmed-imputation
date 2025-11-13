@@ -2,14 +2,23 @@ include { GetPrefix } from './utils.nf'
 
 process QCMergedImputedFile {
     input:
+        tuple path(ref_genome), path(ref_genome_index)
         path vcf_file
 
     output:
-        path "${output}"
+        tuple path("${output_bcf}"), path("${output_bcf}.csi")
 
     script:
-        output = "${GetPrefix(GetPrefix(vcf_file))}.qced.vcf.gz"
+        output_bcf = "${GetPrefix(GetPrefix(vcf_file))}.qced.bcf"
         """
-        bcftools view -m2 -e '( R2 < ${params.IMPUTATION_R2_FILTER})' --threads ${task.cpus} -O z -o ${output} ${vcf_file}
+        bcftools norm \
+            -m -both \
+            -f ${ref_genome} \
+            --check-ref wx \
+            --threads ${task.cpus} \
+            --output-type=b \
+            --output=${output_bcf} \
+            --write-index=csi \
+            ${vcf_file}
         """
 }
