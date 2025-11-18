@@ -1,6 +1,8 @@
 include { GetPrefix } from './utils.nf'
 
 process QCMergedImputedFile {
+    label "multithreaded"
+    
     input:
         path vcf_file
         tuple path(ref_genome), path(ref_genome_index)
