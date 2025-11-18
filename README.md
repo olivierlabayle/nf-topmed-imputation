@@ -3,10 +3,9 @@
 [![Build Status](https://github.com/olivierlabayle/nf-topmed-imputation/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/olivierlabayle/nf-topmed-imputation/actions/workflows/CI.yml?query=branch%3Amain)
 
 
-This Nextflow workflow sends the genotypes for imputation to [TOPMed](https://imputation.biodatacatalyst.nhlbi.nih.gov/#!pages/home), downloads and aggregates the results per chromosome. It follows the principles provided in their [documentation](https://topmedimpute.readthedocs.io/en/latest/).
+This Nextflow workflow sends the provided genotypes for imputation to [TOPMed](https://imputation.biodatacatalyst.nhlbi.nih.gov/#!pages/home), it downloads and aggregates the results per chromosome and outputs plink2 PGEN filesets. It follows the principles provided in the [TOPMed documentation](https://topmedimpute.readthedocs.io/en/latest/).
 
-!!! note "Platform"
-    The volume of downloaded data can be very large, so make sure you have enough disk space available before running.
+> :warning: The volume of downloaded data can be very large, so make sure you have enough disk space available before running.
 
 
 ## Running The Workflow
@@ -14,16 +13,15 @@ This Nextflow workflow sends the genotypes for imputation to [TOPMed](https://im
 To run the workflow, run:
 
 ```bash
-nextflow run main.nf -profile eddie -resume -with-report -with-trace -c conf/run.config
+nextflow run main.nf -profile PROFILE -resume -with-report -with-trace -c conf/run.config
 ```
 
-where;
+where:
 
-- The `eddie` profile provides the platform specific parameters and is only to be used by University of Edinburgh researchers on the [Eddie platform](https://digitalresearchservices.ed.ac.uk/resources/eddie).
-- The `conf/run.config` provides the inputs to the pipeline (see below)
+- The `PROFILE` profile provides the platform specific parameters. For University of Edinburgh researchers, the `eddie` profile can be used to run on the [Eddie platform](https://digitalresearchservices.ed.ac.uk/resources/eddie).
+- The `conf/run.config` provides the inputs to the pipeline (see Workflow Parameters)
 
-!!! note "Crash"
-    The `TOPMedImputation` process waits for TOPMed imputation jobs to finish, which might be longer than the maximum eddie job duration (48h) depending on the server's queue size. In that case, the workflow will crash but all the TOPMed jobs should have been submitted. Resuming the workflow will thus not work and it will try to resubmit new jobs. In order to bypass this behaviour you can pass an optional `TOPMED_JOBS_LIST` to proceed directly to the download stage. These job ids can be obtained from the TOPMed urls.
+> :warning: The `TOPMedImputation` process waits for TOPMed imputation jobs to finish, which might be longer than the maximum job duration on your platform (e.g. 48h on Eddie). In that case, the workflow will crash but all the TOPMed jobs should have been submitted. Resuming the workflow will thus not work and it will try to resubmit new jobs. In order to bypass this behaviour you can provide the optional `TOPMED_JOBS_LIST` to proceed directly to the download stage. These job ids can be obtained from the TOPMed urls.
 
 ## Workflow Parameters
 
@@ -52,4 +50,5 @@ These must be provided:
 
 All outputs are produced in `PUBLISH_DIR` (defaults to `results`), the main outputs of the workflow are:
 
-- `chr_P.qced.{pgen,pvar,psam}`: A set of imputed genotypes, one for each chromosome in PGEN format.
+- `$PUBLISH_DIR/chr_P.qced.{pgen,pvar,psam}`: A set of imputed genotypes, one for each chromosome in PGEN format.
+- `$PUBLISH_DIR/topmed_outputs/*.zip`: Downloaded complete compressed archives from TOPMed.

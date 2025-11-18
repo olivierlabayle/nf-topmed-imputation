@@ -1,4 +1,7 @@
 process MergeVCFsByChr {
+    label "bigmem"
+    label "hyperthreaded"
+
     input:
         tuple val(chr), path(vcf_files)
 
