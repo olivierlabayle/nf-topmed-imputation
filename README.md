@@ -19,9 +19,19 @@ nextflow run main.nf -profile PROFILE -resume -with-report -with-trace -c conf/r
 where:
 
 - The `PROFILE` profile provides the platform specific parameters. For University of Edinburgh researchers, the `eddie` profile can be used to run on the [Eddie platform](https://digitalresearchservices.ed.ac.uk/resources/eddie).
-- The `conf/run.config` provides the inputs to the pipeline (see Workflow Parameters)
+- The `conf/run.config` provides the inputs to the pipeline, you will need to change this file to your need (see Workflow Parameters below).
 
-> :warning: The `TOPMedImputation` process waits for TOPMed imputation jobs to finish, which might be longer than the maximum job duration on your platform (e.g. 48h on Eddie). In that case, the workflow will crash but all the TOPMed jobs should have been submitted. Resuming the workflow will thus not work and it will try to resubmit new jobs. In order to bypass this behaviour you can provide the optional `TOPMED_JOBS_LIST` to proceed directly to the download stage. These job ids can be obtained from the TOPMed urls.
+## Resuming Runs
+
+The `-resume` option will resume a run from the local cache created by Nextflow. However in some cases, this is not enough and we provide two further options to resume a run.
+
+- **Jobs successfully submitted but not downloaded**
+
+The `TOPMedImputation` process waits for TOPMed imputation jobs to finish, which might be longer than the maximum job duration on your platform (e.g. 48h on Eddie). In that case, the workflow will crash but all the TOPMed jobs should have been submitted. Resuming the workflow will thus not work and it will try to resubmit new jobs. In order to bypass this behaviour you can provide the optional `TOPMED_JOBS_LIST` to proceed directly to the download stage. These job ids can be obtained from the TOPMed urls.
+
+- **Jobs successfully downloaded**
+
+If you have pre-downloaded TOPMed zip files (the pipeline will copy them to the `${params.PUBLISH_DIR}/topmed_outputs`) and want to reuse them to regenerate the PGEN files you can use the `TOPMED_ZIP_FILES`, all interaction with TOPMed servers will thus be skipped.
 
 ## Workflow Parameters
 
@@ -36,9 +46,9 @@ These must be provided:
 
 ### Important Options
 
-- `TOPMED_ENCRYPTION_PASSWORD`: An encryption password.
-- `TOPMED_JOBS_LIST`: If the workflow crashes after the jobs have been sent to TOPMed, you can resume from the download step. A list the job-ids in this file (one per line). Job ids can be obtained from the job url in TOPMed.
-- `N_SAMPLES_PER_IMPUTATION_JOBS` (default: 10000): We can only send file of less than 200000 samples to TOPMed and the server only allows 3 jobs at a time. This number ideally splits your data in 3 roughly equal batches.
+- `TOPMED_ENCRYPTION_PASSWORD` (default: `password`): An encryption password.
+- `TOPMED_JOBS_LIST` (default: `NO_TOPMED_JOBS`): If the workflow crashes after the jobs have been sent to TOPMed, you can resume from the download step. A list the job-ids in this file (one per line). Job ids can be obtained from the job url in TOPMed.
+- `N_SAMPLES_PER_IMPUTATION_JOBS` (default: 15000): We can only send file of less than 200000 samples to TOPMed and the server only allows 3 jobs at a time. This number ideally splits your data in 3 roughly equal batches.
 - `IMPUTATION_R2_FILTER` (default: 0.9): Only imputed variants passing the threshold are kept, set to 0 if you want to keep them all.
 - `TOPMED_ZIP_FILES` (default: `NO_FILES`): You can use this option to resume a workflow from pre-downloaded zip files. Provide the path to pre-downloaded zip files (e.g. `path/to/my_run_zip_files*`). Files will be unzipped using the `TOPMED_ENCRYPTION_PASSWORD` password.
 
