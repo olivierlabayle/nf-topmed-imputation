@@ -2,7 +2,6 @@ include { GetJuliaCmd } from './utils.nf'
 
 process DownloadTOPMedZipFile {
     publishDir "${params.PUBLISH_DIR}/topmed_outputs", mode: "copy"
-    storeDir "${params.ZIP_FILES_STORE_DIR}" 
 
     input:
         tuple val(job_id), path(md5_file), path(zip_file_info)

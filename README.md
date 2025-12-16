@@ -36,11 +36,11 @@ These must be provided:
 
 ### Important Options
 
-- `TOPMED_ENCRYPTION_PASSWORD`: An encryption password
-- `TOPMED_JOBS_LIST`: If the workflow crashes and you want to resume, list the job-ids in this file (one per line). Job ids can be obtained from the job url in TOPMed.
+- `TOPMED_ENCRYPTION_PASSWORD`: An encryption password.
+- `TOPMED_JOBS_LIST`: If the workflow crashes after the jobs have been sent to TOPMed, you can resume from the download step. A list the job-ids in this file (one per line). Job ids can be obtained from the job url in TOPMed.
 - `N_SAMPLES_PER_IMPUTATION_JOBS` (default: 10000): We can only send file of less than 200000 samples to TOPMed and the server only allows 3 jobs at a time. This number ideally splits your data in 3 roughly equal batches.
 - `IMPUTATION_R2_FILTER` (default: 0.9): Only imputed variants passing the threshold are kept, set to 0 if you want to keep them all.
-- `ZIP_FILES_STORE_DIR` (default: `${launchDir}/topmed_zip_files`): Directory where the raw outputs from TOPMed will be stored. This is useful because TOPMed deletes jobs outputs from the servers after a week.
+- `TOPMED_ZIP_FILES` (default: `NO_FILES`): You can use this option to resume a workflow from pre-downloaded zip files. Provide the path to pre-downloaded zip files (e.g. `path/to/my_run_zip_files*`). Files will be unzipped using the `TOPMED_ENCRYPTION_PASSWORD` password.
 
 ### Secondary Options
 

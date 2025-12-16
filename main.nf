@@ -12,34 +12,42 @@ include { BCFToPGEN } from './modules/vcf_to_pgen.nf'
 include { DownloadReferenceGenome } from './modules/download_reference_genome.nf'
 
 workflow {
-    topmed_api_token = file(params.TOPMED_TOKEN_FILE)
-    bed_genotypes = Channel.fromPath("${params.GENOTYPES_PREFIX}.{bed,bim,fam}").collect()
-    // Send for Imputation or retrieve jobs list
-    if (params.TOPMED_JOBS_LIST == "NO_TOPMED_JOBS") {
-        split_files = WriteImputationSplitLists(bed_genotypes)
-        chrs_samples_split_files = split_files.chromosomes.splitText(){x -> x[0..-2]}
-            .combine(split_files.samples.flatten())
-        vcf_splits = MakeVCFSplit(
-            bed_genotypes,
-            chrs_samples_split_files
-        )
-        jobs_files = TOPMedImputation(topmed_api_token, vcf_splits.collect())
-        job_ids = jobs_files
-            .flatten()
-            .splitText()
-            .map { it -> it.trim() }
+    // Check if TOPMed zip files are provided by the user, then we simply use them
+    if (params.TOPMED_ZIP_FILES !== "NO_FILES") {
+        zip_files = Channel.fromPath(params.TOPMED_ZIP_FILES)
     }
+    // Otherwise we will interact with TOPMed servers
     else {
-        job_ids = Channel.fromList(params.TOPMED_JOBS_LIST)
+        topmed_api_token = file(params.TOPMED_TOKEN_FILE)
+        bed_genotypes = Channel.fromPath("${params.GENOTYPES_PREFIX}.{bed,bim,fam}").collect()
+        // If the user hasn't provided a TOPMED job list we simply send the genotypes for imputation
+        if (params.TOPMED_JOBS_LIST == "NO_TOPMED_JOBS") {
+            split_files = WriteImputationSplitLists(bed_genotypes)
+            chrs_samples_split_files = split_files.chromosomes.splitText(){x -> x[0..-2]}
+                .combine(split_files.samples.flatten())
+            vcf_splits = MakeVCFSplit(
+                bed_genotypes,
+                chrs_samples_split_files
+            )
+            jobs_files = TOPMedImputation(topmed_api_token, vcf_splits.collect())
+            job_ids = jobs_files
+                .flatten()
+                .splitText()
+                .map { it -> it.trim() }
+        }
+        // Otherwise we resume and retrieve the results from TOPMed
+        else {
+            job_ids = Channel.fromList(params.TOPMED_JOBS_LIST)
+        }
+        // Download TOPMed files
+        files_to_download = GetTOPMedDownloadList(topmed_api_token, job_ids)
+        zip_files_infos = files_to_download.zip_files.transpose()
+        md5_files = files_to_download.md5_file.transpose()
+        md5_to_zip_files_infos = md5_files.combine(zip_files_infos, by: 0)
+        zip_files = DownloadTOPMedZipFile(md5_to_zip_files_infos, topmed_api_token)
     }
     // Download Reference Genome
     ref_genome = DownloadReferenceGenome()
-    // Download TOPMed files
-    files_to_download = GetTOPMedDownloadList(topmed_api_token, job_ids)
-    zip_files_infos = files_to_download.zip_files.transpose()
-    md5_files = files_to_download.md5_file.transpose()
-    md5_to_zip_files_infos = md5_files.combine(zip_files_infos, by: 0)
-    zip_files = DownloadTOPMedZipFile(md5_to_zip_files_infos, topmed_api_token)
     // Unzip TOPMed files
     unziped_files = UnzipTOPMedFile(zip_files)
     // Merge VCFs by chromosome
