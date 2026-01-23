@@ -13,7 +13,7 @@ process BCFToPGEN {
 
     script:
         output_prefix = GetPrefix(GetPrefix(bcf_file))
-        var_ids_option = '@:#\\$r:\\$a' // In single quotes to avoid interpolation
+        var_ids_option = '@:#:\\$r:\\$a' // In single quotes to avoid interpolation
         awk_script = '{sub(/.*@/, "", $1); print}'
         """
         plink2 \
