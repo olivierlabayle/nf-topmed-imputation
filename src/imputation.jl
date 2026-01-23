@@ -67,7 +67,7 @@ end
 function send_job_to_topmed(group, jobname, token, password; r2=0.8)
     cmd = Cmd([
         "curl", 
-        "https://imputation.biodatacatalyst.nhlbi.nih.gov/api/v2/jobs/submit/imputationserver",
+        "https://imputation.biodatacatalyst.nhlbi.nih.gov/api/v2/jobs/submit/imputationserver2",
         "-X", "POST",
         "-H", "X-Auth-Token: $token",
         "-F", "job-name=$jobname",
