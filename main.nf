@@ -19,9 +19,9 @@ workflow {
     // Otherwise we will interact with TOPMed servers
     else {
         topmed_api_token = file(params.TOPMED_TOKEN_FILE)
-        bed_genotypes = Channel.fromPath("${params.GENOTYPES_PREFIX}.{bed,bim,fam}").collect()
         // If the user hasn't provided a TOPMED job list we simply send the genotypes for imputation
         if (params.TOPMED_JOBS_LIST == "NO_TOPMED_JOBS") {
+            bed_genotypes = Channel.fromPath("${params.GENOTYPES_PREFIX}.{bed,bim,fam}").collect()
             split_files = WriteImputationSplitLists(bed_genotypes)
             chrs_samples_split_files = split_files.chromosomes.splitText(){x -> x[0..-2]}
                 .combine(split_files.samples.flatten())
