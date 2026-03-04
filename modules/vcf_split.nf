@@ -22,7 +22,7 @@ process MakeVCFSplit {
             --export vcf-4.2 id-delim=@ \
             --out ${output_prefix} \
             --threads ${task.cpus} \
-            --output-chr chr26
+            --output-chr chrMT
         
         bgzip ${output_prefix}.vcf
         """
