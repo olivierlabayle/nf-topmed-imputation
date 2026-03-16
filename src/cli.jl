@@ -101,6 +101,11 @@ function cli_settings()
             help = "Password for the TOPMed API."
             default = "abcde"
 
+        "--check-allele-freq"
+            arg_type = String
+            help = "Whether TOPMed should check allele frequencies: all/off"
+            default = "all"
+
         "--max-concurrent-submissions"
             arg_type = Int
             help = "Maximum number of concurrent submissions to the TOPMed API."
@@ -148,7 +153,9 @@ function julia_main()::Cint
             max_concurrent_submissions=cmd_settings["max-concurrent-submissions"],
             refresh_rate=cmd_settings["refresh-rate"],
             r2=cmd_settings["r2"],
-            output_prefix=cmd_settings["output-prefix"]
+            output_prefix=cmd_settings["output-prefix"],
+            
+            =cmd_settings["check-allele-freq"]
         )
     elseif cmd == "get-topmed-download-list"
         get_download_list_and_checksum(

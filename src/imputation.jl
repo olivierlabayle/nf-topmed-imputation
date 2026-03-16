@@ -64,7 +64,7 @@ function get_vcf_files_channel(genotypes_prefix)
     end
 end
 
-function send_job_to_topmed(group, jobname, token, password; r2=0.8)
+function send_job_to_topmed(group, jobname, token, password; r2=0.8, check_allele_freq="all")
     cmd = Cmd([
         "curl", 
         "https://imputation.biodatacatalyst.nhlbi.nih.gov/api/v2/jobs/submit/imputationserver2",
@@ -79,6 +79,7 @@ function send_job_to_topmed(group, jobname, token, password; r2=0.8)
         "-F", "population=all",
         "-F", "meta=yes",
         "-F", "r2Filter=$r2",
+        "-F", "population=$check_allele_freq"
     ])
     job_details = JSON.parse(read(cmd, String))
     job_details["success"] == true || throw(error(job_details["message"]))
@@ -159,9 +160,9 @@ function _download_topmed_file(file_dict, token, jobname; refresh_rate=360)
     end
 end
 
-function send_to_topmed_and_write_job_id(channel, token, password; refresh_rate=120, r2=0.8, output_prefix="topmed")
+function send_to_topmed_and_write_job_id(channel, token, password; refresh_rate=120, r2=0.8, output_prefix="topmed", check_allele_freq="all")
     for (jobname, group) in channel
-        job_details = send_job_to_topmed(group, jobname, token, password;r2=r2)
+        job_details = send_job_to_topmed(group, jobname, token, password;r2=r2, check_allele_freq=check_allele_freq)
         job_id = job_details["id"]
         status = wait_for_completion(token, job_id; rate=refresh_rate)
         write(string(output_prefix, ".", job_id, ".txt"), job_id)
@@ -226,6 +227,7 @@ function impute(genotypes_prefix, token_file;
     max_concurrent_submissions=3,
     refresh_rate=120,
     r2=0.8,
+    check_allele_freq="all",
     output_prefix="cohort_to_impute"
     )
     token = get_token(token_file)
@@ -237,7 +239,8 @@ function impute(genotypes_prefix, token_file;
         Threads.@spawn send_to_topmed_and_write_job_id(
             vcf_files_channel, 
             token, 
-            password; 
+            password;
+            check_allele_freq=check_allele_freq,
             refresh_rate=refresh_rate,
             r2=r2,
             output_prefix=output_prefix
