@@ -21,6 +21,7 @@ process TOPMedImputation {
             --max-concurrent-submissions ${params.TOPMED_MAX_PARALLEL_JOBS} \
             --refresh-rate ${params.TOPMED_REFRESH_RATE} \
             --r2 ${params.IMPUTATION_R2_FILTER} \
-            --output-prefix cohort_to_impute
+            --output-prefix cohort_to_impute \
+            --check-allele-freq=${params.CHECK_ALLELE_FREQ}
         """
 }

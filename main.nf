@@ -12,6 +12,9 @@ include { BCFToPGEN } from './modules/vcf_to_pgen.nf'
 include { DownloadReferenceGenome } from './modules/download_reference_genome.nf'
 
 workflow {
+    // Download Reference Genome
+    ref_genome = DownloadReferenceGenome()
+
     // Check if TOPMed zip files are provided by the user, then we simply use them
     if (params.TOPMED_ZIP_FILES !== "NO_FILES") {
         zip_files = Channel.fromPath(params.TOPMED_ZIP_FILES)
@@ -27,6 +30,7 @@ workflow {
                 .combine(split_files.samples.flatten())
             vcf_splits = MakeVCFSplit(
                 bed_genotypes,
+                ref_genome,
                 chrs_samples_split_files
             )
             jobs_files = TOPMedImputation(topmed_api_token, vcf_splits.collect())
@@ -46,8 +50,6 @@ workflow {
         md5_to_zip_files_infos = md5_files.combine(zip_files_infos, by: 0)
         zip_files = DownloadTOPMedZipFile(md5_to_zip_files_infos, topmed_api_token)
     }
-    // Download Reference Genome
-    ref_genome = DownloadReferenceGenome()
     // Unzip TOPMed files
     unziped_files = UnzipTOPMedFile(zip_files)
     // Merge VCFs by chromosome

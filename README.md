@@ -47,6 +47,7 @@ These must be provided:
 ### Important Options
 
 - `TOPMED_ENCRYPTION_PASSWORD` (default: `password`): An encryption password.
+- `CHECK_ALLELE_FREQ` (default: `all`): Whether TOPMed should check allele frequencies (`all`/`off`).
 - `TOPMED_JOBS_LIST` (default: `NO_TOPMED_JOBS`): If the workflow crashes after the jobs have been sent to TOPMed, you can resume from the download step. A list the job-ids in this file (one per line). Job ids can be obtained from the job url in TOPMed.
 - `N_SAMPLES_PER_IMPUTATION_JOBS` (default: 15000): We can only send file of less than 200000 samples to TOPMed and the server only allows 3 jobs at a time. This number ideally splits your data in 3 roughly equal batches.
 - `IMPUTATION_R2_FILTER` (default: 0.9): Only imputed variants passing the threshold are kept, set to 0 if you want to keep them all.

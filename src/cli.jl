@@ -154,8 +154,7 @@ function julia_main()::Cint
             refresh_rate=cmd_settings["refresh-rate"],
             r2=cmd_settings["r2"],
             output_prefix=cmd_settings["output-prefix"],
-            
-            =cmd_settings["check-allele-freq"]
+            check_allele_freq=cmd_settings["check-allele-freq"]
         )
     elseif cmd == "get-topmed-download-list"
         get_download_list_and_checksum(

@@ -5,6 +5,7 @@ process MakeVCFSplit {
 
     input:
         path genotypes
+        tuple path(ref_genome), path(ref_genome_index)
         tuple val(chr), path(samples)
 
     output:
@@ -22,6 +23,7 @@ process MakeVCFSplit {
             --export vcf-4.2 id-delim=@ \
             --out ${output_prefix} \
             --threads ${task.cpus} \
+            --ref-from-fa ${ref_genome} \
             --output-chr chrMT
         
         bgzip ${output_prefix}.vcf
