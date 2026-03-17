@@ -40,11 +40,6 @@ function cli_settings()
             required = true
             help = "Info of the file to be downloaded."
 
-        "--md5-file"
-            arg_type = String
-            default = nothing
-            help = "Optional file to check MD5 against (for imputed .zip files)."
-
         "--refresh-rate"
             arg_type = Int
             help = "Rate at which to refresh the job status."
@@ -167,7 +162,6 @@ function julia_main()::Cint
             cmd_settings["job-id"], 
             cmd_settings["token-file"],
             cmd_settings["file-info"];
-            md5_file=cmd_settings["md5-file"],
             refresh_rate=cmd_settings["refresh-rate"]
             )
     else

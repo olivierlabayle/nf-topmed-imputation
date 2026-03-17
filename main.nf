@@ -44,11 +44,8 @@ workflow {
             job_ids = Channel.fromList(params.TOPMED_JOBS_LIST)
         }
         // Download TOPMed files
-        files_to_download = GetTOPMedDownloadList(topmed_api_token, job_ids)
-        zip_files_infos = files_to_download.zip_files.transpose()
-        md5_files = files_to_download.md5_file.transpose()
-        md5_to_zip_files_infos = md5_files.combine(zip_files_infos, by: 0)
-        zip_files = DownloadTOPMedZipFile(md5_to_zip_files_infos, topmed_api_token)
+        download_zip_info_files = GetTOPMedDownloadList(topmed_api_token, job_ids)
+        zip_files = DownloadTOPMedZipFile(download_zip_info_files, topmed_api_token)
     }
     // Unzip TOPMed files
     unziped_files = UnzipTOPMedFile(zip_files)

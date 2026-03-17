@@ -6,10 +6,7 @@ process GetTOPMedDownloadList {
         val job_id
 
     output:
-        tuple val(job_id), path("*.txt"), emit: info_files
-        tuple val(job_id), path("*.zip"), emit: zip_files
-        tuple val(job_id), path("*.md5", arity: 1), emit: md5_file
-        tuple val(job_id), path("*.html", arity: 1), emit: report_file
+        tuple val(job_id), path("*.json")
 
     script:
         """
