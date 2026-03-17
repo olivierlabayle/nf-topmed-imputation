@@ -45,7 +45,7 @@ workflow {
         }
         // Download TOPMed files
         download_zip_info_files = GetTOPMedDownloadList(topmed_api_token, job_ids)
-        zip_files = DownloadTOPMedZipFile(download_zip_info_files, topmed_api_token)
+        zip_files = DownloadTOPMedZipFile(download_zip_info_files.transpose(), topmed_api_token)
     }
     // Unzip TOPMed files
     unziped_files = UnzipTOPMedFile(zip_files)

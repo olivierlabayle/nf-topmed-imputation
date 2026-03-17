@@ -1,4 +1,4 @@
-include { GetJuliaCmd } from './utils.nf'
+include { GetJuliaCmd; GetPrefix } from './utils.nf'
 
 process DownloadTOPMedZipFile {
     publishDir "${params.PUBLISH_DIR}/topmed_outputs", mode: "copy"
