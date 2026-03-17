@@ -1,6 +1,6 @@
 process MergeVCFsByChr {
     label "bigmem"
-    label "hyperthreaded"
+    label "multithreaded"
 
     input:
         tuple val(chr), path(vcf_files)
@@ -17,6 +17,6 @@ process MergeVCFsByChr {
         """
         echo "${sorted_vcf_files_string}" > merge_list.txt
 
-        bcftools merge --threads ${task.cpus} -o ${output} -O z -l merge_list.txt
+        bcftools merge --threads ${task.cpus} -o ${output} -O z -l merge_list.txt --force-single
         """
 }
