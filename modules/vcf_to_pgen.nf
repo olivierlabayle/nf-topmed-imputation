@@ -2,7 +2,7 @@ include { GetPrefix } from './utils.nf'
 
 process BCFToPGEN {
     label "bigmem"
-    label "hyperthreaded"
+    label "multithreaded"
     publishDir "${params.PUBLISH_DIR}", mode: "copy"
 
     input:
