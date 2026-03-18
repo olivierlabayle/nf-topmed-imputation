@@ -136,13 +136,15 @@ function has_download_suceeded(output_file)
     first_line = readline(output_file)
     try
         content = JSON.parse(first_line)
-        if content["success"] == false && content["message"] == "number of max downloads exceeded."
-            @info "Could not download file $output_file due to max downloads exceeded. Waiting."
-            return false
+        if content["success"] == false
+            message = content["message"]
+            @info "Could not download file $output_file due to: $message"
+            return false            
         end
     catch
         return true
     end
+    throw(ArgumentError("Unrecognozied downloaded file"))
 end
 
 function _download_topmed_file(file_dict, token, jobname; refresh_rate=360)
